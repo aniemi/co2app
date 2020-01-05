@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>World CO2 Emissions</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+	<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Quicksand:300&display=swap" rel="stylesheet">
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body>
+	<header>
+			<h1><a href="{{ url_for('major_powers') }}">World CO2 Emissions</a></h1>
+			<span></span>
+		</div>
+	</header>
+	<main>
+			<nav>
+
+				<div class="search-container">
+					<form action="/" method="POST">
+					<p>
+					{{ form.hidden_tag() }}
+					{{ form.country(placeholder="e.g. 'Afghanistan'") }}
+					
+					<br>
+					{{ form.per_capita.label }}
+					{{ form.per_capita(placeholder="Per Capita") }}
+					<br> 
+					{{ form.submit(placeholder="") }}
+					</p>
+					<ul>
+						<li style="display: none;"><a href="{{ url_for('major_powers') }}">Emissions by major powers</a></li>
+					</ul>
+					</form>
+			</nav>
+
+			<div class="main-container">
+				
+
+							<canvas id="emissionsChart" height="250"></canvas>
+							<script>
+								var json =  '{{ json|safe }}'
+								obj = JSON.parse(json); 
+									var years = []; 
+									var emissions = []; 
+		
+									$.each( obj, function( key, val ) {
+										years.push(key); 
+										emissions.push(val);
+									   });
+									
+								   var ctx = document.getElementById('emissionsChart').getContext('2d');
+								   var chart = new Chart(ctx, {
+									   type: 'line',
+									   data: {
+										   
+										   labels: years,
+										   datasets: [{
+											   label: "emissions",
+											   backgroundColor: 'rgb(129, 198, 2228)',
+											   borderColor: 'rgb(0, 150, 215)',
+											   data: emissions
+											}]
+										},
+									options: {
+										responsive: 'true',
+										animations: 'true',
+									}
+										});
+							</script>
+		
+			</div>
+		</main>
+		<footer>
+			<div class="footer-container" id="img-copyright">
+				<p>"Walking through a field" by Curt Carnemark / World Bank. Used under Creative Commons Attribution-NonCommercial-NoDerivs 2.0 Generic (CC BY-NC-ND 2.0).</p>
+			</div>
+			<div class="footer-container" id="about">
+			</div>
+		</footer>
+</body>
+</html>
